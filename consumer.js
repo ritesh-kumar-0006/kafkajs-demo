@@ -1,7 +1,7 @@
 const kafka = require("./client");
-
+const group = process.argv[2];
 async function init() {
-  const consumer = kafka.consumer({ groupId: "user1" });
+  const consumer = kafka.consumer({ groupId: group });
   console.log("Connecting...");
   await consumer.connect();
   console.log("Connected");
@@ -10,7 +10,9 @@ async function init() {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      console.log(`[${topic}]: PART:${partition}:${message.value.toString()}`);
+      console.log(
+        `${group}:[${topic}]: PART:${partition}:${message.value.toString()}`
+      );
     },
   });
 }
